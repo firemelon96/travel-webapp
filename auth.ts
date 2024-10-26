@@ -1,12 +1,15 @@
 import NextAuth from 'next-auth';
-import bcrypt from 'bcryptjs';
+import { PrismaAdapter } from '@auth/prisma-adapter';
+
 import Github from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
-import { PrismaAdapter } from '@auth/prisma-adapter';
-
 import { db } from './lib/db';
+import { UserRole } from '@prisma/client';
 import { LoginSchema } from './schemas';
+import bcrypt from 'bcryptjs';
+import { getUserById } from './actions/user-actions';
+import { access } from 'fs';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(db),
@@ -39,4 +42,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
+  callbacks: {
+    async signIn({ user }) {
+      const existingUser = await getUserById(user.id);
+      if (existingUser) {
+        user.role = existingUser.role;
+      }
+      return true;
+    },
+    async jwt({ token, user }) {
+      if (user?.role) {
+        token.role = user.role as UserRole;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token?.role) {
+        session.user.role = token.role;
+      }
+      return session;
+    },
+  },
 });

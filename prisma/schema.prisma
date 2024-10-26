@@ -24,6 +24,7 @@ model User {
   role    UserRole     @default(USER)
   tours   Tour[]
   accounts Account[]
+  bookings Booking[]
 }
 
 model Account {
@@ -66,10 +67,30 @@ model Tour {
   author     User       @relation(fields: [authorId], references: [id])
   authorId   String
   categories Category[]
+  bookings Booking[]
 
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
 
+}
+
+//create a booking table that connect the tour to the user
+model Booking {
+  id      String @id @default(cuid())
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  tour           Tour         @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  tourId         String
+  startDate      DateTime     
+  endDate        DateTime?     
+  participants   Int
+  totalPrice     Int
+  status         BookingStatus @default(PENDING)
+
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@map("Bookings")
 }
 
 model Itenerary {
@@ -83,7 +104,7 @@ model Itenerary {
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
 
-  @@map("iteneraries")
+  @@map("Iteneraries")
 }
 
 model Category {
@@ -100,4 +121,10 @@ enum UserRole {
 enum TourType {
   PACKAGE
   DAY
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
 }

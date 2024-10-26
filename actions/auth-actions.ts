@@ -82,5 +82,5 @@ export const signInAction = async (values: z.infer<typeof LoginSchema>) => {
 };
 
 export const signOutAction = async () => {
-  await signOut();
+  await signOut({ redirectTo: '/sign-in' });
 };

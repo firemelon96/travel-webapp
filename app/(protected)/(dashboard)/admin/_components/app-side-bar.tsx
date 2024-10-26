@@ -20,7 +20,10 @@ import {
   Calendar,
   ChevronUp,
   Home,
+  HomeIcon,
+  Hotel,
   Inbox,
+  KeySquare,
   LogOut,
   Map,
   Search,
@@ -41,14 +44,19 @@ const items = [
     icon: Home,
   },
   {
-    title: 'Travel',
-    url: '/travel',
+    title: 'Tours',
+    url: '/tours',
     icon: Map,
   },
   {
-    title: 'Calendar',
-    url: '#',
-    icon: Calendar,
+    title: 'Rentals',
+    url: '/rentals',
+    icon: KeySquare,
+  },
+  {
+    title: 'Hotels',
+    url: '/hotels',
+    icon: Hotel,
   },
   {
     title: 'Search',
@@ -68,7 +76,11 @@ export const AppSidebar = () => {
 
   return (
     <Sidebar>
-      <SidebarHeader />
+      <SidebarHeader>
+        <Button className='text-left'>
+          <HomeIcon /> Travel and tours
+        </Button>
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Travel Tour</SidebarGroupLabel>
@@ -92,7 +104,7 @@ export const AppSidebar = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <User2 /> {session?.user?.name}
+                  <User2 /> {session?.user?.name} {session?.user.role}
                   <ChevronUp className='ml-auto' />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
