@@ -4,7 +4,7 @@ import NextAuth from 'next-auth';
 import { revalidatePath } from 'next/cache';
 
 const isPublicRoutes = ['/'];
-const authRoutes = ['/sign-in', '/register'];
+const authRoutes = ['/sign-in', '/register', '/new-verification'];
 const adminRoute = ['/admin/dashboard'];
 const userRoute = ['/u'];
 

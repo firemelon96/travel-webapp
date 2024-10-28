@@ -15,13 +15,16 @@ import { RegisterSchema } from '@/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { register } from '@/actions/auth-actions';
 import { useRouter } from 'next/navigation';
+import { FormSuccess } from '@/components/form-success';
+import { FormError } from '@/components/form-error';
 
 export const RegisterForm = () => {
   const [isLoading, startTransition] = useTransition();
-  const router = useRouter();
+  const [success, setSuccess] = useState<string | undefined>();
+  const [error, setError] = useState<string | undefined>();
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -35,8 +38,11 @@ export const RegisterForm = () => {
   const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
     startTransition(() => {
       register(values)
-        .then((data) => console.log(data))
-        .catch((err) => console.log(err));
+        .then((data) => {
+          setSuccess(data.success);
+          setError(data.error);
+        })
+        .catch((error) => setError(error.message));
     });
   };
 
@@ -104,7 +110,8 @@ export const RegisterForm = () => {
               )}
             />
           </div>
-
+          <FormSuccess message={success} />
+          <FormError message={error} />
           <Button disabled={isLoading} className='w-full' type='submit'>
             Create an account
           </Button>

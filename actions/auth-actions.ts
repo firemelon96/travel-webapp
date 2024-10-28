@@ -6,6 +6,13 @@ import { LoginSchema, RegisterSchema } from '@/schemas';
 import { db } from '@/lib/db';
 import { AuthError } from 'next-auth';
 import { signIn, signOut } from '@/auth';
+import {
+  generateVerificationToken,
+  getUserByEmail,
+  getVerificationTokenByToken,
+} from '@/lib/auth-helper';
+import { sendVerificationEmail } from '@/lib/mail';
+import { revalidatePath } from 'next/cache';
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validatedFields = RegisterSchema.safeParse(values);
@@ -36,7 +43,45 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     },
   });
 
+  const verificationToken = await generateVerificationToken(email);
+
+  await sendVerificationEmail(verificationToken.email, verificationToken.token);
+
   return { success: 'User created' };
+};
+
+export const newVerification = async (token: string) => {
+  const existingToken = await getVerificationTokenByToken(token);
+
+  if (!existingToken) {
+    return { error: 'Token does not exist!' };
+  }
+
+  const hasExpired = new Date(existingToken.expires) < new Date();
+
+  if (hasExpired) {
+    return { error: 'Token has expired!' };
+  }
+
+  const existingUser = await getUserByEmail(existingToken.email);
+
+  if (!existingUser) {
+    return { error: 'Email does not exist!' };
+  }
+
+  await db.user.update({
+    where: { id: existingUser.id },
+    data: {
+      emailVerified: new Date(),
+      email: existingToken.email,
+    },
+  });
+
+  await db.verificationToken.delete({
+    where: { id: existingToken.id },
+  });
+
+  return { success: 'Email verified!' };
 };
 
 export const signInAction = async (values: z.infer<typeof LoginSchema>) => {
@@ -56,6 +101,21 @@ export const signInAction = async (values: z.infer<typeof LoginSchema>) => {
 
   if (!existingUser || !existingUser.email || !existingUser.password) {
     return { error: 'User does not exist' };
+  }
+
+  if (!existingUser.emailVerified) {
+    const verificationToken = await generateVerificationToken(
+      existingUser.email
+    );
+
+    await sendVerificationEmail(
+      verificationToken.email,
+      verificationToken.token
+    );
+
+    revalidatePath('/u');
+
+    return { success: 'Verification email sent!' };
   }
 
   try {

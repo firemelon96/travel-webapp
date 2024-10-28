@@ -16,11 +16,15 @@ import { useForm } from 'react-hook-form';
 import { LoginSchema } from '@/schemas';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { signInAction } from '@/actions/auth-actions';
+import { FormSuccess } from '@/components/form-success';
+import { FormError } from '@/components/form-error';
 
 export const LoginForm = () => {
   const [isLoading, startTransition] = useTransition();
+  const [success, setSuccess] = useState<string | undefined>();
+  const [error, setError] = useState<string | undefined>();
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -33,8 +37,11 @@ export const LoginForm = () => {
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     startTransition(() => {
       signInAction(values)
-        .then((data) => console.log(data))
-        .catch((error) => console.log(error));
+        .then((data) => {
+          setSuccess(data.success);
+          setError(data.error);
+        })
+        .catch((error) => setError(error.message));
     });
   };
 
@@ -85,6 +92,8 @@ export const LoginForm = () => {
               )}
             />
           </div>
+          <FormSuccess message={success} />
+          <FormError message={error} />
           <Button disabled={isLoading} type='submit' className='w-full'>
             Login
           </Button>

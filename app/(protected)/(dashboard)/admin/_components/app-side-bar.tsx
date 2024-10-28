@@ -40,22 +40,22 @@ import { useSession } from 'next-auth/react';
 const items = [
   {
     title: 'Home',
-    url: '/dashboard',
+    url: '/admin/dashboard',
     icon: Home,
   },
   {
     title: 'Tours',
-    url: '/tours',
+    url: '/admin/tours',
     icon: Map,
   },
   {
     title: 'Rentals',
-    url: '/rentals',
+    url: '/admin/rentals',
     icon: KeySquare,
   },
   {
     title: 'Hotels',
-    url: '/hotels',
+    url: '/admin/hotels',
     icon: Hotel,
   },
   {
@@ -65,7 +65,7 @@ const items = [
   },
   {
     title: 'Settings',
-    url: '/settings',
+    url: '/admin/settings',
     icon: Settings,
   },
 ];

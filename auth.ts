@@ -9,7 +9,6 @@ import { UserRole } from '@prisma/client';
 import { LoginSchema } from './schemas';
 import bcrypt from 'bcryptjs';
 import { getUserById } from './actions/user-actions';
-import { access } from 'fs';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(db),
@@ -45,9 +44,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async signIn({ user }) {
       const existingUser = await getUserById(user.id);
-      if (existingUser) {
-        user.role = existingUser.role;
-      }
+
+      if (!existingUser?.emailVerified) return false;
+
+      user.role = existingUser.role;
+
       return true;
     },
     async jwt({ token, user }) {
