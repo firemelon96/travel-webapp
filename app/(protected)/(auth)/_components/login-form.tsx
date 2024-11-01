@@ -91,11 +91,12 @@ export const LoginForm = () => {
                 </FormItem>
               )}
             />
+            {/* TODO:Forgot password */}
           </div>
           <FormSuccess message={success} />
           <FormError message={error} />
           <Button disabled={isLoading} type='submit' className='w-full'>
-            Login
+            Sign in
           </Button>
         </form>
       </Form>

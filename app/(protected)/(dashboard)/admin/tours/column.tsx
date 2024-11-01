@@ -2,29 +2,22 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 
-import { MoreHorizontal } from 'lucide-react';
-
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Checkbox } from '@/components/ui/checkbox';
+import Image from 'next/image';
+import { Actions } from './actions';
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Payment = {
+export type Tour = {
   id: string;
-  amount: number;
-  status: 'pending' | 'processing' | 'success' | 'failed';
-  email: string;
+  images: string[];
+  title: string;
+  price?: number | null;
+  type: 'DAY' | 'PACKAGE';
+  isFeatured: boolean;
 };
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Tour>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -46,43 +39,37 @@ export const columns: ColumnDef<Payment>[] = [
     ),
   },
   {
-    accessorKey: 'status',
-    header: 'Status',
+    accessorKey: 'images',
+    header: 'Image',
+    cell: ({ row }) => {
+      return (
+        <Image
+          src={row.original.images[0]}
+          alt='image'
+          width={50}
+          height={50}
+        />
+      );
+    },
   },
   {
-    accessorKey: 'email',
-    header: 'Email',
+    accessorKey: 'title',
+    header: 'Title',
   },
   {
-    accessorKey: 'amount',
-    header: 'Amount',
+    accessorKey: 'price',
+    header: 'Price',
+  },
+  {
+    accessorKey: 'type',
+    header: 'Type',
+  },
+  {
+    accessorKey: 'isFeatured',
+    header: 'Featured',
   },
   {
     id: 'actions',
-    cell: ({ row }) => {
-      const payment = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant='ghost' className='h-8 w-8 p-0'>
-              <span className='sr-only'>Open menu</span>
-              <MoreHorizontal className='h-4 w-4' />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align='end'>
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    cell: ({ row }) => <Actions id={row.original.id} />,
   },
 ];

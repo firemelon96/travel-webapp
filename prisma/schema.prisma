@@ -55,6 +55,8 @@ model VerificationToken {
   @@unique([email, token])
 }
 
+// TODO: Add reset password token
+
 model Tour {
   id         String        @id @default(cuid())
   title      String
@@ -71,10 +73,10 @@ model Tour {
   notes     String[]
   reminders String[]
   images  String[]
-  minPax  Int
-  maxPax  Int
-  author     User       @relation(fields: [authorId], references: [id])
-  authorId   String
+  minPax  Int?
+  maxPax  Int?
+  userId   String
+  user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   categories Category[]
   bookings Booking[]
 

@@ -14,6 +14,7 @@ import { auth } from '@/auth';
 
 export const Header = async ({ children }: { children: ReactNode }) => {
   const session = await auth();
+  console.log(session);
 
   return (
     <SidebarInset>
