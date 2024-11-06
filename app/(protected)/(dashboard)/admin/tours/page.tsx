@@ -1,4 +1,5 @@
-import { getTours } from '@/features/admin/tours/actions/tour';
+'use client';
+import { deleteMany, getTours } from '@/features/admin/tours/actions/tour';
 import { columns, Tour } from './column';
 import { DataTable } from '../_components/data-table';
 import {
@@ -12,24 +13,25 @@ import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { useNewTour } from '@/features/admin/tours/hooks/use-new-tour';
 import { AddButton } from '../_components/add-button';
+import { useTransition } from 'react';
+import { toast } from 'sonner';
+import { useGetTours } from '@/features/admin/tours/api/use-get-tours';
+import { useBulkDeleteTours } from '@/features/admin/tours/api/use-bulk-delete-tours';
 
-// async function getData(): Promise<Payment[]> {
-//   // Fetch data from your API here.
-//   return [
-//     {
-//       id: '728ed52f',
-//       amount: 100,
-//       status: 'pending',
-//       email: 'm@example.com',
-//     },
-//     // ...
-//   ];
-// }
+const TravelPage = () => {
+  const { data } = useGetTours();
 
-const TravelPage = async () => {
-  // const data = await getData();
-  const data = await getTours();
+  const { mutate, isPending } = useBulkDeleteTours();
+
+  // const [isPending, startTransition] = useTransition();
   // console.log(tours);
+
+  // const handleDelete = () => {
+  //   startTransition(() => {
+  //     deleteMany();
+  //   });
+  // };
+
   return (
     <div className='max-w-screen-2xl mx-auto w-full p-4'>
       <Card className='border-none drop-shadow-none'>
@@ -43,7 +45,16 @@ const TravelPage = async () => {
           <AddButton>Add Tour</AddButton>
         </CardHeader>
         <CardContent>
-          <DataTable filterKey='title' columns={columns} data={data} />
+          <DataTable
+            filterKey='title'
+            columns={columns}
+            data={data || []}
+            onDelete={(row) => {
+              const ids = row.map((r) => r.original.id);
+              mutate(ids);
+            }}
+            disabled={isPending}
+          />
         </CardContent>
       </Card>
     </div>

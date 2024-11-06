@@ -6,20 +6,23 @@ import { auth } from '@/auth';
 import { Header } from './_components/header';
 import { SheetProvider } from '@/providers/sheet-provider';
 import { Toaster } from '@/components/ui/sonner';
+import QueryProvider from '@/providers/query-provider';
 
 const DashboardLayout = async ({ children }: { children: ReactNode }) => {
   const session = await auth();
   return (
-    <SessionProvider session={session}>
-      <SidebarProvider>
-        <AppSidebar />
-        <Header>
-          <SheetProvider />
-          <main className='w-full'>{children}</main>
-          <Toaster />
-        </Header>
-      </SidebarProvider>
-    </SessionProvider>
+    <QueryProvider>
+      <SessionProvider session={session}>
+        <SidebarProvider>
+          <AppSidebar />
+          <Header>
+            <SheetProvider />
+            <main className='w-full'>{children}</main>
+            <Toaster />
+          </Header>
+        </SidebarProvider>
+      </SessionProvider>
+    </QueryProvider>
   );
 };
 

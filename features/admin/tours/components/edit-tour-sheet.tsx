@@ -8,38 +8,37 @@ import {
 } from '@/components/ui/sheet';
 import { TourForm } from './tour-form';
 import { TourSchema } from '@/schemas';
-import { useEffect, useState, useTransition } from 'react';
-import { Tour, TourType } from '@prisma/client';
+import { PricingType, TourType } from '@prisma/client';
 import { useEditTour } from '../hooks/use-edit-tour';
-import { getTourById } from '../actions/tour';
 import { Loader2 } from 'lucide-react';
-
-type TourWithoutMeta = z.input<typeof TourSchema>;
+import { useConfirm } from '@/hooks/use-confirm';
+import { useGetTour } from '../api/use-get-tour';
+import { useDeleteTour } from '../api/use-delete-tour';
+import { useUpdateTour } from '../api/use-update-tour';
 
 export const EditTourSheet = () => {
   const { isOpen, onClose, id } = useEditTour();
-  const [isLoading, startTransition] = useTransition();
-  const [tourData, setTourData] = useState<TourWithoutMeta | null>(null);
 
-  useEffect(() => {
-    startTransition(() => {
-      getTourById(id!).then((data) => {
-        if (data) setTourData(data);
-      });
-    });
-  }, [id]);
+  const [ConfirmDialog, confirm] = useConfirm(
+    'Are you sure',
+    'You are about to delete this account.'
+  );
 
-  console.log({ id, tourData });
+  const { mutate, isPending: isLoadingDelete } = useDeleteTour(id);
+  const { data: tourData, isLoading } = useGetTour(id);
+  const { mutate: updateTour, isPending: isLoadingUpdate } = useUpdateTour(id);
+
+  console.log(id, tourData);
+  const isLoadingForm = isLoadingDelete || isLoadingUpdate;
 
   const defaultValues = tourData
     ? {
         title: tourData.title,
         description: tourData.description,
         address: tourData.address,
-        price: tourData.price,
+        prices: tourData.prices,
         isFeatured: tourData.isFeatured,
         images: tourData.images,
-        // privatePrice: [],
         type: tourData.type,
         minPax: tourData.minPax,
         maxPax: tourData.maxPax,
@@ -49,41 +48,66 @@ export const EditTourSheet = () => {
         title: '',
         description: '',
         address: '',
-        price: 0,
+        prices: [
+          {
+            pricingType: PricingType.JOINER,
+            minGroupSize: 1,
+            maxGroupSize: 1,
+            price: 0,
+          },
+        ],
         isFeatured: true,
         images: [],
-        // privatePrice: [],
         type: TourType.DAY,
         minPax: 2,
         maxPax: 12,
         published: true,
       };
 
+  const onDelete = async () => {
+    const ok = await confirm();
+
+    if (ok) {
+      mutate(undefined, {
+        onSuccess: () => {
+          onClose();
+        },
+      });
+    }
+  };
+
   const onSubmit = (values: z.infer<typeof TourSchema>) => {
-    // console.log(values);
-    console.log(values);
+    updateTour(values, {
+      onSuccess: () => {
+        onClose();
+      },
+    });
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Edit Tour</SheetTitle>
-          <SheetDescription>Edit an existing tour</SheetDescription>
-        </SheetHeader>
-        {isLoading ? (
-          <div className='absolutee inset-0 flex items-center justify-center'>
-            <Loader2 className='size-4 text-muted-foreground animate-spin' />
-          </div>
-        ) : (
-          <TourForm
-            id={id}
-            onSubmit={() => {}}
-            defaultValues={defaultValues}
-            disabled={isLoading}
-          />
-        )}
-      </SheetContent>
-    </Sheet>
+    <>
+      <ConfirmDialog />
+      <Sheet open={isOpen} onOpenChange={onClose}>
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>Edit Tour</SheetTitle>
+            <SheetDescription>Edit an existing tour</SheetDescription>
+          </SheetHeader>
+          {isLoading ? (
+            <div className='absolutee inset-0 flex items-center justify-center'>
+              <Loader2 className='size-4 text-muted-foreground animate-spin' />
+            </div>
+          ) : (
+            <TourForm
+              id={id}
+              onSubmit={onSubmit}
+              defaultValues={defaultValues}
+              disabled={isLoadingForm}
+              onDelete={onDelete}
+            />
+          )}
+        </SheetContent>
+      </Sheet>
+    </>
   );
 };

@@ -5,6 +5,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import Image from 'next/image';
 import { Actions } from './actions';
+import { TourPricing } from '@prisma/client';
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -12,7 +13,7 @@ export type Tour = {
   id: string;
   images: string[];
   title: string;
-  price?: number | null;
+  prices: TourPricing[];
   type: 'DAY' | 'PACKAGE';
   isFeatured: boolean;
 };
@@ -59,6 +60,13 @@ export const columns: ColumnDef<Tour>[] = [
   {
     accessorKey: 'price',
     header: 'Price',
+    cell: ({ row }) => (
+      <div>
+        {row.original.prices.map((price) => (
+          <p key={price.id}>{price.price}</p>
+        ))}
+      </div>
+    ),
   },
   {
     accessorKey: 'type',

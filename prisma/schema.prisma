@@ -63,7 +63,7 @@ model Tour {
   isFeatured Boolean
   type    TourType  @default(DAY)
   address String
-  price   Int?
+  prices  TourPricing[]
   privatePrice  Int[]
   description String
   iteneraries Itenerary[]
@@ -83,6 +83,23 @@ model Tour {
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
 
+}
+
+model TourPricing {
+  id          String        @id @default(cuid())
+  tourId      String
+  pricingType PricingType  @default(JOINER)   // "private" or "joiner"
+  minGroupSize Int
+  maxGroupSize Int
+  price       Float
+  tour        Tour       @relation(fields: [tourId], references: [id],onDelete: Cascade)
+
+  @@unique([tourId])
+}
+
+enum PricingType {
+  PRIVATE
+  JOINER
 }
 
 //create a booking table that connect the tour to the user

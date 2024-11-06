@@ -1,3 +1,4 @@
+import { PricingType } from '@prisma/client';
 import { z } from 'zod';
 
 export const LoginSchema = z.object({
@@ -39,19 +40,31 @@ export const RegisterSchema = z.object({
 
 // }
 
+export const TourPricing = z.object({
+  pricingType: z.enum([PricingType.JOINER, PricingType.PRIVATE]),
+  minGroupSize: z.number(),
+  maxGroupSize: z.number(),
+  price: z.number(),
+});
+
 export const TourSchema = z.object({
   title: z.string().min(1, { message: 'Title is required!' }),
   isFeatured: z.boolean(),
   type: z.enum(['DAY', 'PACKAGE']),
   address: z.string().min(1, { message: 'Address is required' }),
-  price: z.number().nullable(),
-  // privatePrice: z.number().array(),
+  prices: z.array(TourPricing),
   description: z
     .string()
     .min(50, { message: 'Minimum of 50 character is required' })
     .max(200, { message: 'Maximum of 200 characters reached!' }),
   published: z.boolean(),
-  minPax: z.number().nullable(),
-  maxPax: z.number().nullable(),
+  minPax: z
+    .number({ invalid_type_error: 'Min pax must be a number' })
+    .positive()
+    .nullable(),
+  maxPax: z
+    .number({ invalid_type_error: 'Max pax must be a number' })
+    .positive()
+    .nullish(),
   images: z.string().array().min(1, { message: 'Upload at least 1 image' }),
 });

@@ -8,17 +8,22 @@ import {
 } from '@/components/ui/sheet';
 import { useNewTour } from '../hooks/use-new-tour';
 import { TourForm } from './tour-form';
-import { TourSchema } from '@/schemas';
-import { useTransition } from 'react';
-import { addTour } from '../actions/tour';
-import { toast } from 'sonner';
-import { TourType } from '@prisma/client';
+import { TourPricing, TourSchema } from '@/schemas';
+import { PricingType, TourType } from '@prisma/client';
+import { useCreateTour } from '../api/use-create-tour';
 
 const defaultValues = {
-  title: '',
-  description: '',
-  address: '',
-  price: 0,
+  title: 'This is from react query',
+  description: 'HElllo from react query howdy and i love to creeate webapps',
+  address: 'Puerto',
+  prices: [
+    {
+      pricingType: PricingType.JOINER,
+      minGroupSize: 1,
+      maxGroupSize: 1,
+      price: 0,
+    },
+  ],
   isFeatured: true,
   images: [],
   // privatePrice: [],
@@ -30,20 +35,13 @@ const defaultValues = {
 
 export const NewTourSheet = () => {
   const { isOpen, onClose } = useNewTour();
-  const [isLoading, startTransition] = useTransition();
+  const { mutate, isPending } = useCreateTour();
 
   const onSubmit = (values: z.infer<typeof TourSchema>) => {
-    // console.log(values);
-    startTransition(() => {
-      addTour(values)
-        .then((data) => {
-          if (data.success) {
-            toast.success(data.success);
-            onClose();
-          }
-          if (data.error) toast.error(data.error);
-        })
-        .catch((error) => toast.error(error));
+    mutate(values, {
+      onSuccess: () => {
+        onClose();
+      },
     });
   };
 
@@ -57,7 +55,7 @@ export const NewTourSheet = () => {
         <TourForm
           onSubmit={onSubmit}
           defaultValues={defaultValues}
-          disabled={isLoading}
+          disabled={isPending}
         />
       </SheetContent>
     </Sheet>
