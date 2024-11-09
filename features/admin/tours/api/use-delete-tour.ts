@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteTour } from '../actions/tour';
+import { deleteTour } from '../actions/delete-tour';
 import { toast } from 'sonner';
 
 export const useDeleteTour = (id: string) => {

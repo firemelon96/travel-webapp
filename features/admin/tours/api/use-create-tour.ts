@@ -1,8 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { addTour } from '../actions/tour';
+
 import { z } from 'zod';
 import { TourSchema } from '@/schemas';
 import { toast } from 'sonner';
+import { addTour } from '../actions/add-tours';
 
 type TourType = z.infer<typeof TourSchema>;
 

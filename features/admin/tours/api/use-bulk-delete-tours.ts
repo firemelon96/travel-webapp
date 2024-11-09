@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteMany } from '../actions/tour';
+import { deleteMany } from '../actions/bulk-delete-tours';
 import { toast } from 'sonner';
 
 export const useBulkDeleteTours = () => {

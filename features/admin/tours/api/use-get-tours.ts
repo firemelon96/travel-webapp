@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getTours } from '../actions/tour';
+import { getTours } from '../actions/get-tours';
 
 export const useGetTours = () => {
   const query = useQuery({

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { updateTour } from '../actions/tour';
+import { updateTour } from '../actions/update-tour';
 import { z } from 'zod';
 import { TourSchema } from '@/schemas';
 import { toast } from 'sonner';

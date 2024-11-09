@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { X } from 'lucide-react';
 import Image from 'next/image';
-import { utDeleteImages } from '../actions/tour';
+import { utDeleteImages } from '../actions/delete-ut-images';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
 
