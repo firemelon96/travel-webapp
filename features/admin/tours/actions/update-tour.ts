@@ -45,8 +45,6 @@ export const updateTour = async (
     maxPax,
   } = validatedFields.data;
 
-  //TODO FIx the update
-
   try {
     const updateTour = await db.tour.update({
       where: { id, userId: session.user.id },
