@@ -41,6 +41,7 @@ export const RegisterSchema = z.object({
 // }
 
 export const TourPricing = z.object({
+  id: z.string().optional(),
   pricingType: z.enum([PricingType.JOINER, PricingType.PRIVATE]),
   minGroupSize: z.number(),
   maxGroupSize: z.number(),
@@ -67,4 +68,13 @@ export const TourSchema = z.object({
     .positive()
     .nullish(),
   images: z.string().array().min(1, { message: 'Upload at least 1 image' }),
+});
+
+export const FilterSchema = z.object({
+  serviceType: z.string(),
+  address: z.string(),
+  dateRange: z.object({
+    from: z.date(),
+    to: z.date(),
+  }),
 });

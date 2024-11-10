@@ -153,6 +153,19 @@ export const TourForm = ({
             >
               <FormField
                 control={form.control}
+                name={`prices.${index}.id`}
+                render={({ field }) => (
+                  <FormItem hidden>
+                    <FormLabel>Id</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
                 name={`prices.${index}.pricingType`}
                 render={({ field }) => (
                   <FormItem>

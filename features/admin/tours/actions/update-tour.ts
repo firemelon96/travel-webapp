@@ -62,17 +62,14 @@ export const updateTour = async (
         maxPax,
         prices: {
           upsert: prices.map((tier) => ({
-            where: {
-              // Find the pricing tier by tourId and possibly by pricing id
-              tourId: existingTour.id, // Adjust as needed for uniqueness
-            },
-            create: {
-              pricingType: tier.pricingType,
+            where: { id: tier.id || '' },
+            update: {
               minGroupSize: tier.minGroupSize,
               maxGroupSize: tier.maxGroupSize,
               price: tier.price,
             },
-            update: {
+            create: {
+              pricingType: tier.pricingType,
               minGroupSize: tier.minGroupSize,
               maxGroupSize: tier.maxGroupSize,
               price: tier.price,

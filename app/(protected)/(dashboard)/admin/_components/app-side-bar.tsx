@@ -33,8 +33,7 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { SignOut } from './sign-out';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 // Menu items.
 const items = [
@@ -112,8 +111,8 @@ export const AppSidebar = () => {
                 side='top'
                 className='w-[--radix-popper-anchor-width]'
               >
-                <DropdownMenuItem>
-                  <LogOut /> <SignOut />
+                <DropdownMenuItem onClick={() => signOut()}>
+                  <LogOut /> Sign out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
