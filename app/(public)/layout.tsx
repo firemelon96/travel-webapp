@@ -1,12 +1,17 @@
 import { ReactNode } from 'react';
 import { Navigation } from './components/navigation';
+import QueryProvider from '@/providers/query-provider';
+import { Toaster } from 'sonner';
 
 const PublicLayout = ({ children }: { children: ReactNode }) => {
   return (
-    <main>
-      <Navigation />
-      {children}
-    </main>
+    <QueryProvider>
+      <main>
+        <Navigation />
+        {children}
+        <Toaster />
+      </main>
+    </QueryProvider>
   );
 };
 

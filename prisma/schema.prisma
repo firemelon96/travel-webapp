@@ -25,6 +25,7 @@ model User {
   tours   Tour[]
   accounts Account[]
   bookings Booking[]
+  likes  Like[]
 }
 
 model Account {
@@ -79,10 +80,22 @@ model Tour {
   user     User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   categories Category[]
   bookings Booking[]
+  likes  Like[]
 
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
+}
 
+
+model Like {
+  id      String   @id @default(uuid())
+  userId  String
+  tourId  String
+  user    User     @relation(fields: [userId], references: [id],onDelete: Cascade)
+  tour    Tour     @relation(fields: [tourId], references: [id],onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, tourId]) // Ensure a user can only like a tour once
 }
 
 model TourPricing {
@@ -94,7 +107,7 @@ model TourPricing {
   price       Float
   tour        Tour       @relation(fields: [tourId], references: [id],onDelete: Cascade)
 
-  @@unique([tourId])
+  @@unique([tourId, pricingType, minGroupSize, maxGroupSize])
 }
 
 enum PricingType {

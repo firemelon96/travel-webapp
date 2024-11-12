@@ -1,6 +1,6 @@
 'use client';
-import { deleteMany, getTours } from '@/features/admin/tours/actions/tour';
-import { columns, Tour } from './column';
+
+import { columns } from './column';
 import { DataTable } from '../_components/data-table';
 import {
   Card,
@@ -9,12 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
-import { useNewTour } from '@/features/admin/tours/hooks/use-new-tour';
 import { AddButton } from '../_components/add-button';
-import { useTransition } from 'react';
-import { toast } from 'sonner';
 import { useGetTours } from '@/features/admin/tours/api/use-get-tours';
 import { useBulkDeleteTours } from '@/features/admin/tours/api/use-bulk-delete-tours';
 
@@ -22,15 +17,6 @@ const TravelPage = () => {
   const { data } = useGetTours();
 
   const { mutate, isPending } = useBulkDeleteTours();
-
-  // const [isPending, startTransition] = useTransition();
-  // console.log(tours);
-
-  // const handleDelete = () => {
-  //   startTransition(() => {
-  //     deleteMany();
-  //   });
-  // };
 
   return (
     <div className='max-w-screen-2xl mx-auto w-full p-4'>

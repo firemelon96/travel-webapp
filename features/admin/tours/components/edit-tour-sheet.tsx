@@ -28,7 +28,6 @@ export const EditTourSheet = () => {
   const { data: tourData, isLoading } = useGetTour(id);
   const { mutate: updateTour, isPending: isLoadingUpdate } = useUpdateTour(id);
 
-  console.log(id, tourData);
   const isLoadingForm = isLoadingDelete || isLoadingUpdate;
 
   const defaultValues = tourData

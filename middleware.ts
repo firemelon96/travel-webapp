@@ -7,7 +7,7 @@ const publicRoutes = ['/', 'api/uploadthing'];
 const authRoutes = ['/sign-in', '/register', '/new-verification'];
 const adminRoute = ['/admin/dashboard'];
 const userRoute = ['/u'];
-const publicPrefix = ['/tours', '/transfers'];
+const publicPrefix = ['/tours', '/transfers', '/new-verification'];
 
 export default middleware(async (req) => {
   const token = await getToken({ req, secret: process.env.AUTH_SECRET });

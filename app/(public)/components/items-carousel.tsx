@@ -1,3 +1,4 @@
+import { ItemCard } from '@/components/item-card';
 import {
   Carousel,
   CarouselContent,
@@ -5,21 +6,11 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { ItemCard } from './item-card';
 import { db } from '@/lib/db';
+import { getFeaturedTours } from '@/lib/tour';
 
 export const ItemsCarousel = async () => {
-  const featuredTours = await db.tour.findMany({
-    where: {
-      isFeatured: true,
-    },
-    include: {
-      prices: true,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
+  const featuredTours = await getFeaturedTours();
 
   return (
     <Carousel
@@ -41,6 +32,7 @@ export const ItemsCarousel = async () => {
                 prices={tour.prices}
                 address={tour.address}
                 id={tour.id}
+                likes={tour.likes}
               />
             </div>
           </CarouselItem>

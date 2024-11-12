@@ -40,7 +40,6 @@ export const RegisterForm = () => {
       register(values)
         .then((data) => {
           setSuccess(data.success);
-          setError(data.error);
         })
         .catch((error) => setError(error.message));
     });

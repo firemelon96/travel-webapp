@@ -20,3 +20,20 @@ export const getTours = async () => {
 
   return tours;
 };
+
+export const getFeaturedTours = async () => {
+  const featuredTours = await db.tour.findMany({
+    where: {
+      isFeatured: true,
+    },
+    include: {
+      prices: true,
+      likes: true,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+
+  return featuredTours;
+};
