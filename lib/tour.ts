@@ -3,6 +3,7 @@ import { db } from './db';
 export const getTourById = async (id: string) => {
   const tour = await db.tour.findUnique({
     where: { id },
+    include: { prices: true },
   });
 
   return tour;
@@ -15,6 +16,7 @@ export const getTours = async () => {
     },
     include: {
       prices: true,
+      likes: true,
     },
   });
 

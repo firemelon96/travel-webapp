@@ -1,5 +1,5 @@
 import { getTours } from '@/lib/tour';
-import { ItemCard } from '../components/item-card';
+import { ItemCard } from '@/components/item-card';
 
 const TourPage = async () => {
   const tours = await getTours();
@@ -13,7 +13,7 @@ const TourPage = async () => {
         <span>Sort</span>
       </div>
       <div className='container mx-auto'>
-        <div className='grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6'>
+        <div className='grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5 '>
           {tours.map((tour) => (
             <ItemCard
               key={tour.id}
@@ -22,6 +22,7 @@ const TourPage = async () => {
               id={tour.id}
               prices={tour.prices}
               title={tour.title}
+              likes={tour.likes}
             />
           ))}
         </div>

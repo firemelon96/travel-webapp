@@ -88,24 +88,24 @@ model Tour {
 
 
 model Like {
-  id      String   @id @default(uuid())
-  userId  String
-  tourId  String
-  user    User     @relation(fields: [userId], references: [id],onDelete: Cascade)
-  tour    Tour     @relation(fields: [tourId], references: [id],onDelete: Cascade)
-  createdAt DateTime @default(now())
+  id            String   @id @default(uuid())
+  userId        String
+  tourId        String
+  user          User     @relation(fields: [userId], references: [id],onDelete: Cascade)
+  tour          Tour     @relation(fields: [tourId], references: [id],onDelete: Cascade)
+  createdAt     DateTime @default(now())
 
   @@unique([userId, tourId]) // Ensure a user can only like a tour once
 }
 
 model TourPricing {
-  id          String        @id @default(cuid())
-  tourId      String
-  pricingType PricingType  @default(JOINER)   // "private" or "joiner"
-  minGroupSize Int
-  maxGroupSize Int
-  price       Float
-  tour        Tour       @relation(fields: [tourId], references: [id],onDelete: Cascade)
+  id            String      @id @default(cuid())
+  tourId        String
+  pricingType   PricingType @default(JOINER)   // "private" or "joiner"
+  minGroupSize  Int
+  maxGroupSize  Int
+  price         Float
+  tour          Tour        @relation(fields: [tourId], references: [id],onDelete: Cascade)
 
   @@unique([tourId, pricingType, minGroupSize, maxGroupSize])
 }
@@ -117,10 +117,10 @@ enum PricingType {
 
 //create a booking table that connect the tour to the user
 model Booking {
-  id      String @id @default(cuid())
-  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String        @id @default(cuid())
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId         String
-  tour           Tour         @relation(fields: [tourId], references: [id], onDelete: Cascade)
+  tour           Tour          @relation(fields: [tourId], references: [id], onDelete: Cascade)
   tourId         String
   startDate      DateTime     
   endDate        DateTime?     
@@ -128,10 +128,35 @@ model Booking {
   totalPrice     Int
   status         BookingStatus @default(PENDING)
 
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  paymentId      String?       @unique
+  payment        Payment?      @relation(fields: [paymentId], references: [id])
+
+  //contact information
+  contactName     String
+  contactEmail    String?
+  contactNumber   String?
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
   @@map("Bookings")
+}
+
+model Payment {
+  id            String   @id @default(uuid())
+  amount        Int
+  status        String
+  currency      String   @default("PHP")
+  description   String
+  externalId    String   @unique
+  userId        String
+  paymentType   String   // e.g., "BANK_TRANSFER", "EWALLET", "CARD"
+  paymentLink   String?  // Store Xendit payment link, if applicable
+
+  booking       Booking? 
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 model Itenerary {

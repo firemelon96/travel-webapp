@@ -12,34 +12,6 @@ export const RegisterSchema = z.object({
   password: z.string().min(6, { message: 'Minimum 6 character is required' }),
 });
 
-// model Tour {
-//   id         String        @id @default(cuid())
-//   title      String
-//   isFeatured Boolean
-//   type    TourType  @default(DAY)
-//   address String
-//   price   Int?
-//   privatePrice  Int[]
-//   description String
-//   iteneraries Itenerary[]
-//   published  Boolean    @default(false)
-//   inclusions  String[]
-//   exclusions  String[]
-//   notes     String[]
-//   reminders String[]
-//   images  String[]
-//   minPax  Int
-//   maxPax  Int
-//   author     User       @relation(fields: [authorId], references: [id])
-//   authorId   String
-//   categories Category[]
-//   bookings Booking[]
-
-//   createdAt  DateTime   @default(now())
-//   updatedAt  DateTime   @updatedAt
-
-// }
-
 export const TourPricing = z.object({
   id: z.string().optional(),
   pricingType: z.enum([PricingType.JOINER, PricingType.PRIVATE]),
@@ -78,3 +50,29 @@ export const FilterSchema = z.object({
     to: z.date(),
   }),
 });
+
+export const contactFormSchema = z.object({
+  contactName: z.string().min(1, { message: 'Name is required' }),
+  contactEmail: z.string().email(),
+  contactNumber: z.string().min(1, { message: 'Contact is required' }),
+});
+
+export const BookingSchema = z.object({
+  participants: z.number(),
+  startDate: z.date(),
+  endDate: z.date().optional(),
+  totalPrice: z.number(),
+  tourId: z.string(),
+  contactName: z.string().min(1, { message: 'Name is required' }),
+  contactEmail: z.string().email(),
+  contactNumber: z.string().min(1, { message: 'Contact is required' }),
+});
+
+// participants,
+// startDate,
+// endDate,
+// totalPrice,
+// tourId,
+// contactName,
+// contactEmail,
+// contactNumber,
