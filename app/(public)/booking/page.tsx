@@ -14,7 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGetTour } from '@/features/admin/tours/api/use-get-tour';
 import { format } from 'date-fns';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ContactForm, FormValues } from './components/contact-form';
 import { Button } from '@/components/ui/button';
 import { useTransition } from 'react';
@@ -26,6 +26,8 @@ const BookingPage = () => {
   const searchParams = useSearchParams();
 
   const [isPending, startTransition] = useTransition();
+
+  const router = useRouter();
 
   const from = searchParams.get('from') || '';
   const to = searchParams.get('to') || '';
@@ -46,7 +48,13 @@ const BookingPage = () => {
         totalPrice: +totalPrice,
         tourId,
       })
-        .then((data) => toast.success('Booked tour successfully'))
+        .then((data) => {
+          const payment = data?.payment;
+
+          toast.success('Tour booked successfully!');
+
+          router.push(payment?.paymentLink || '');
+        })
         .catch((error) => toast.error(error.message));
     });
   };

@@ -2,6 +2,7 @@
 
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
+import { createXenditPayment, Payload } from '@/lib/xendit';
 import { BookingSchema } from '@/schemas';
 import { z } from 'zod';
 
@@ -31,9 +32,62 @@ export const bookTour = async (values: z.infer<typeof BookingSchema>) => {
         userId: session.user.id,
         ...validFields,
       },
+      include: {
+        tour: true,
+        user: {
+          select: {
+            email: true,
+          },
+        },
+      },
     });
 
-    return booking;
+    // Step 3: Create payment
+    const paymentPayload: Payload = {
+      external_id: `booking_${booking.id}`,
+      amount: booking.totalPrice,
+      currency: 'PHP',
+      items: [
+        {
+          name: booking.tour.title,
+          category: booking.tour.type,
+          price: booking.totalPrice,
+          quantity: booking.participants,
+        },
+      ],
+      success_redirect_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment-success`,
+      failure_redirect_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment-error`,
+      customer: {
+        given_names: booking.contactName,
+        email: booking.contactEmail || booking.user.email,
+        mobile_number: booking.contactNumber || '',
+      },
+      customer_notification_preference: {
+        invoice_paid: ['email'],
+      },
+    };
+
+    const paymentResponse = await createXenditPayment(paymentPayload);
+
+    console.log(paymentResponse);
+
+    // Save payment to the database
+    const payment = await db.payment.create({
+      data: {
+        amount: paymentResponse.amount,
+        status: paymentResponse.status,
+        currency: paymentResponse.currency,
+        externalId: paymentResponse.external_id,
+        description: `${booking.tour.title} booking`,
+        paymentType: booking.tour.type,
+        paymentLink:
+          paymentResponse.invoice_url || paymentResponse.checkout_url, // Save payment link
+        userId: session.user.id,
+        booking: { connect: { id: booking.id } }, // Link booking
+      },
+    });
+
+    return { booking, payment };
   } catch (error) {
     console.log(error);
   }

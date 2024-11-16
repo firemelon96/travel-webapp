@@ -40,7 +40,6 @@ export const ItemCard = ({
   const isLiked = likes.find(
     (like) => like.tourId === id && like.userId === session.data?.user.id
   );
-  console.log(isLiked);
   const [like, setLike] = useState(!!isLiked);
   const [isPending, startTransition] = useTransition();
   const link = address.split(' ').join('-');
