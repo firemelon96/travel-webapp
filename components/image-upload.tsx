@@ -25,6 +25,7 @@ export const ImageUpload = ({ onChange }: Props) => {
         }}
         onUploadError={(error: Error) => {
           // Do something with the error.
+          console.log(error);
           toast.error('File size too large, or maximum upload exceeds');
         }}
       />

@@ -17,12 +17,10 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import {
-  Calendar,
   ChevronUp,
   Home,
   HomeIcon,
   Hotel,
-  Inbox,
   KeySquare,
   LogOut,
   Map,

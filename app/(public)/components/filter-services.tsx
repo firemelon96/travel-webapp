@@ -4,7 +4,6 @@ import { Card } from '@/components/ui/card';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -24,7 +23,6 @@ import { z } from 'zod';
 import { addDays, format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
-import { DateRange } from 'react-day-picker';
 
 export const FilterServices = () => {
   const form = useForm<z.infer<typeof FilterSchema>>({

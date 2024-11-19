@@ -16,7 +16,6 @@ import { useGetTour } from '@/features/admin/tours/api/use-get-tour';
 import { format } from 'date-fns';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ContactForm, FormValues } from './components/contact-form';
-import { Button } from '@/components/ui/button';
 import { useTransition } from 'react';
 import { bookTour } from '@/actions/booking/booking-action';
 import { convertStringDateToDate } from '@/lib/utils';
@@ -51,9 +50,11 @@ const BookingPage = () => {
         .then((data) => {
           const payment = data?.payment;
 
+          if (!payment?.paymentLink) return;
+
           toast.success('Tour booked successfully!');
 
-          router.push(payment?.paymentLink || '');
+          router.push(payment?.paymentLink);
         })
         .catch((error) => toast.error(error.message));
     });
@@ -78,8 +79,8 @@ const BookingPage = () => {
                 <BookingPreviewSkeleton />
               ) : (
                 <BookingPreview
-                  url={data?.images[0]!}
-                  title={data?.title!}
+                  url={data?.images[0] || ''}
+                  title={data?.title || ''}
                   participants={participants}
                   type={travellerType}
                 />

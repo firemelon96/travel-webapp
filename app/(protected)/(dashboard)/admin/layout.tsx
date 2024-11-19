@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { AppSidebar } from './_components/app-side-bar';
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import { Header } from './_components/header';
 import { SheetProvider } from '@/providers/sheet-provider';
 import { Toaster } from '@/components/ui/sonner';

@@ -20,7 +20,9 @@ export const BookingPreview = ({ url, title, participants, type }: Props) => {
       />
       <div className='space-y-2'>
         <p>{title}</p>
-        <span className='text-slate-500'>{type.toLowerCase()}</span>
+        <span className='text-slate-500'>
+          {type.toLowerCase()} x{participants} person(s)
+        </span>
       </div>
     </div>
   );

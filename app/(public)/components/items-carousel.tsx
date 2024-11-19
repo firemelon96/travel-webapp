@@ -3,10 +3,7 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from '@/components/ui/carousel';
-import { db } from '@/lib/db';
 import { getFeaturedTours } from '@/lib/tour';
 
 export const ItemsCarousel = async () => {

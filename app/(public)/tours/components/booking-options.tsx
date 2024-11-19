@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
-import { Booking, PricingType, TourPricing } from '@prisma/client';
+import { PricingType, TourPricing } from '@prisma/client';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -77,7 +77,6 @@ export const BookingOptions = ({ tourId, prices }: Props) => {
 
   const participants = form.watch('participants');
   const travellerType = form.watch('travellerType');
-  const selectedDateRange = form.watch('dateRange.from');
 
   useEffect(() => {
     let selectedPrice = 0;
@@ -107,9 +106,7 @@ export const BookingOptions = ({ tourId, prices }: Props) => {
     }
 
     form.setValue('totalPrice', selectedPrice * participants);
-  }, [participants, travellerType, prices, form.setValue]);
-
-  console.log(price);
+  }, [participants, travellerType, prices, form.setValue, form]);
 
   const onSubmit = (values: z.infer<typeof BookingSchema>) => {
     const { participants, totalPrice, travellerType, dateRange } = values;

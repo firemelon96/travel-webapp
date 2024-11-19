@@ -4,6 +4,7 @@ import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { createXenditPayment, Payload } from '@/lib/xendit';
 import { BookingSchema } from '@/schemas';
+import { redirect } from 'next/navigation';
 import { z } from 'zod';
 
 export const bookTour = async (values: z.infer<typeof BookingSchema>) => {
@@ -87,6 +88,7 @@ export const bookTour = async (values: z.infer<typeof BookingSchema>) => {
       },
     });
 
+    // redirect(payment?.paymentLink);
     return { booking, payment };
   } catch (error) {
     console.log(error);

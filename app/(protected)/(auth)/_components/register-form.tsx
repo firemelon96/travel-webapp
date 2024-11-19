@@ -17,7 +17,6 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useState, useTransition } from 'react';
 import { register } from '@/actions/auth-actions';
-import { useRouter } from 'next/navigation';
 import { FormSuccess } from '@/components/form-success';
 import { FormError } from '@/components/form-error';
 

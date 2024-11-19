@@ -1,21 +1,14 @@
 'use client';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 
-import { Button } from '@/components/ui/button';
 import { Like, TourPricing } from '@prisma/client';
 import { Heart } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useOptimistic, useState, useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import { likeTour, unlikeTour } from '@/features/user/actions/user-actions';
 import { toast } from 'sonner';
 import { HeartFilledIcon } from '@radix-ui/react-icons';
-import { useGetLikedTour } from '@/features/user/api/use-get-liked-tour';
 import { useSession } from 'next-auth/react';
 
 type Props = {
