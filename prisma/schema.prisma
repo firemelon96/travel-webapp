@@ -150,7 +150,7 @@ model Payment {
   description   String
   externalId    String   @unique
   userId        String
-  paymentType   String   // e.g., "BANK_TRANSFER", "EWALLET", "CARD"
+  paymentType   String?   // e.g., "BANK_TRANSFER", "EWALLET", "CARD"
   paymentLink   String?  // Store Xendit payment link, if applicable
 
   booking       Booking? 

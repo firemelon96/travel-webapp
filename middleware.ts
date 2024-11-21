@@ -3,7 +3,7 @@ import { getToken } from 'next-auth/jwt';
 import NextAuth from 'next-auth';
 import { revalidatePath } from 'next/cache';
 
-const publicRoutes = ['/', 'api/uploadthing'];
+const publicRoutes = ['/', 'api/uploadthing', 'api/receive_callback'];
 const authRoutes = ['/sign-in', '/register', '/new-verification'];
 const adminRoute = ['/admin/dashboard'];
 const userRoute = ['/u'];

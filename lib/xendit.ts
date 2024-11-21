@@ -30,6 +30,7 @@ export type Payload = {
   failure_redirect_url: string;
   customer: Customer;
   customer_notification_preference: NotificationPreferences;
+  metadata: { bookingId: string };
 };
 
 export async function createXenditPayment(payload: Payload) {

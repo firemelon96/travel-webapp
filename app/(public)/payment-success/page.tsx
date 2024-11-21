@@ -1,4 +1,4 @@
-const PaymentSuccess = () => {
+const PaymentSuccess = async () => {
   return <div>Your payment is successful</div>;
 };
 

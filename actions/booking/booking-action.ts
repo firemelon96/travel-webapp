@@ -50,9 +50,9 @@ export const bookTour = async (values: z.infer<typeof BookingSchema>) => {
       currency: 'PHP',
       items: [
         {
-          name: booking.tour.title,
+          name: `${booking.tour.title} x${booking.participants} Pax`,
           category: booking.tour.type,
-          price: booking.totalPrice,
+          price: booking.totalPrice / booking.participants,
           quantity: booking.participants,
         },
       ],
@@ -65,6 +65,9 @@ export const bookTour = async (values: z.infer<typeof BookingSchema>) => {
       },
       customer_notification_preference: {
         invoice_paid: ['email'],
+      },
+      metadata: {
+        bookingId: booking.id,
       },
     };
 
@@ -80,7 +83,7 @@ export const bookTour = async (values: z.infer<typeof BookingSchema>) => {
         currency: paymentResponse.currency,
         externalId: paymentResponse.external_id,
         description: `${booking.tour.title} booking`,
-        paymentType: booking.tour.type,
+        paymentType: 'PENDING',
         paymentLink:
           paymentResponse.invoice_url || paymentResponse.checkout_url, // Save payment link
         userId: session.user.id,
