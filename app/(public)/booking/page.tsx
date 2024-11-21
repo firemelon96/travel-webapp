@@ -54,7 +54,7 @@ const BookingPage = () => {
 
           toast.success('Tour booked successfully!');
 
-          router.push(payment?.paymentLink);
+          window.location.href = payment.paymentLink;
         })
         .catch((error) => toast.error(error.message));
     });
