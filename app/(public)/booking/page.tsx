@@ -14,7 +14,7 @@ import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useGetTour } from '@/features/admin/tours/api/use-get-tour';
 import { format } from 'date-fns';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { ContactForm, FormValues } from './components/contact-form';
 import { useTransition } from 'react';
 import { bookTour } from '@/actions/booking/booking-action';
@@ -25,8 +25,6 @@ const BookingPage = () => {
   const searchParams = useSearchParams();
 
   const [isPending, startTransition] = useTransition();
-
-  const router = useRouter();
 
   const from = searchParams.get('from') || '';
   const to = searchParams.get('to') || '';
