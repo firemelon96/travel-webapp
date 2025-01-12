@@ -45,6 +45,24 @@ export const TourForm = ({
     defaultValues: defaultValues,
   });
 
+  const {
+    fields: inclusions,
+    append: addInclusion,
+    remove: removeInclusion,
+  } = useFieldArray({
+    control: form.control,
+    name: 'inclusions',
+  });
+
+  const {
+    fields: exclusions,
+    append: addExclusion,
+    remove: removeExclusion,
+  } = useFieldArray({
+    control: form.control,
+    name: 'exclusions',
+  });
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'prices',
@@ -61,337 +79,436 @@ export const TourForm = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-2 '>
-        <div className='space-y-2'>
-          <FormField
-            control={form.control}
-            name='title'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Title</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder='Title of tour'
-                    type='text'
-                    {...field}
-                    disabled={disabled}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='description'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder='Description of tour'
-                    {...field}
-                    disabled={disabled}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='address'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Address</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder='Address of tour'
-                    {...field}
-                    type='text'
-                    disabled={disabled}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          {!id && uploadedImageUrl.length === 0 && (
+      <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-2'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
+          <div className='space-y-2'>
             <FormField
               control={form.control}
-              name='images'
+              name='title'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Add image</FormLabel>
+                  <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <ImageUpload
-                      onChange={(urls) => {
-                        setUploadedImageUrl(urls);
-                        field.onChange(urls);
-                      }}
+                    <Input
+                      placeholder='Title of tour'
+                      type='text'
+                      {...field}
+                      disabled={disabled}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          )}
-          {uploadedImageUrl.length > 0 && !id && (
-            <PreviewImage imageUrls={uploadedImageUrl} />
-          )}
-          {uploadedImageUrl.length <= 0 &&
-            id &&
-            defaultValues?.images &&
-            defaultValues.images.length > 0 && (
-              <PreviewImage imageUrls={defaultValues?.images} />
+            <FormField
+              control={form.control}
+              name='description'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder='Description of tour'
+                      {...field}
+                      disabled={disabled}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='address'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Address</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder='Address of tour'
+                      {...field}
+                      type='text'
+                      disabled={disabled}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {!id && uploadedImageUrl.length === 0 && (
+              <FormField
+                control={form.control}
+                name='images'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Add image</FormLabel>
+                    <FormControl>
+                      <ImageUpload
+                        onChange={(urls) => {
+                          setUploadedImageUrl(urls);
+                          field.onChange(urls);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             )}
+            {uploadedImageUrl.length > 0 && !id && (
+              <PreviewImage imageUrls={uploadedImageUrl} />
+            )}
+            {uploadedImageUrl.length <= 0 &&
+              id &&
+              defaultValues?.images &&
+              defaultValues.images.length > 0 && (
+                <PreviewImage imageUrls={defaultValues?.images} />
+              )}
 
-          {fields.map((price, index) => (
-            <div
-              key={price.id}
-              className='flex justify-end items-center gap-1 relative'
-            >
-              <FormField
-                control={form.control}
-                name={`prices.${index}.id`}
-                render={({ field }) => (
-                  <FormItem hidden>
-                    <FormLabel>Id</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name={`prices.${index}.pricingType`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Type</FormLabel>
-                    <FormControl>
-                      <Input {...field} disabled />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                name={`prices.${index}.minGroupSize`}
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Min group</FormLabel>
-                    <FormControl>
-                      <Input
-                        type='number'
-                        {...field}
-                        onChange={(value) =>
-                          field.onChange(value.target.valueAsNumber)
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                name={`prices.${index}.maxGroupSize`}
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Max group</FormLabel>
-                    <FormControl>
-                      <Input
-                        type='number'
-                        {...field}
-                        onChange={(value) =>
-                          field.onChange(value.target.valueAsNumber)
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                name={`prices.${index}.price`}
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Price</FormLabel>
-                    <FormControl>
-                      <Input
-                        type='number'
-                        {...field}
-                        onChange={(value) =>
-                          field.onChange(value.target.valueAsNumber)
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <Button
-                size='xs'
-                type='button'
-                variant='destructive'
-                className='absolute rounded-full right-0'
-                onClick={() => remove(index)}
+            {fields.map((price, index) => (
+              <div
+                key={price.id}
+                className='flex justify-end items-center gap-1 relative'
               >
-                <X />
+                <FormField
+                  control={form.control}
+                  name={`prices.${index}.id`}
+                  render={({ field }) => (
+                    <FormItem hidden>
+                      <FormLabel>Id</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name={`prices.${index}.pricingType`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Type</FormLabel>
+                      <FormControl>
+                        <Input {...field} disabled />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  name={`prices.${index}.minGroupSize`}
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Min group</FormLabel>
+                      <FormControl>
+                        <Input
+                          type='number'
+                          {...field}
+                          onChange={(value) =>
+                            field.onChange(value.target.valueAsNumber)
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  name={`prices.${index}.maxGroupSize`}
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Max group</FormLabel>
+                      <FormControl>
+                        <Input
+                          type='number'
+                          {...field}
+                          onChange={(value) =>
+                            field.onChange(value.target.valueAsNumber)
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  name={`prices.${index}.price`}
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Price</FormLabel>
+                      <FormControl>
+                        <Input
+                          type='number'
+                          {...field}
+                          onChange={(value) =>
+                            field.onChange(value.target.valueAsNumber)
+                          }
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button
+                  size='xs'
+                  type='button'
+                  variant='destructive'
+                  className='absolute rounded-full right-0'
+                  onClick={() => remove(index)}
+                >
+                  <X />
+                </Button>
+              </div>
+            ))}
+            <div className='flex gap-2'>
+              <Button
+                type='button'
+                variant='secondary'
+                className='w-full'
+                onClick={() =>
+                  append({
+                    pricingType: 'JOINER',
+                    minGroupSize: 1,
+                    maxGroupSize: 1,
+                    price: 0,
+                  })
+                }
+              >
+                Add Joiner price
+              </Button>
+              <Button
+                type='button'
+                className='w-full'
+                variant='secondary'
+                onClick={() =>
+                  append({
+                    pricingType: 'PRIVATE',
+                    minGroupSize: 1,
+                    maxGroupSize: 2,
+                    price: 0,
+                  })
+                }
+              >
+                Add private price
               </Button>
             </div>
-          ))}
-          <div className='flex gap-2'>
+
+            <div className='flex gap-2'>
+              <FormField
+                name='minPax'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Min pax</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type='number'
+                        value={field.value ?? undefined}
+                        onChange={(value) =>
+                          field.onChange(value.target.valueAsNumber)
+                        }
+                        disabled={disabled}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                name='maxPax'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Max pax</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        value={field.value ?? undefined}
+                        type='number'
+                        onChange={(value) =>
+                          field.onChange(value.target.valueAsNumber)
+                        }
+                        disabled={disabled}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name='type'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tour Type</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className='flex space-x-1'
+                      disabled={disabled}
+                    >
+                      <FormItem className='flex items-center gap-2 space-y-0'>
+                        <FormControl>
+                          <RadioGroupItem value='DAY' />
+                        </FormControl>
+                        <FormLabel>Day</FormLabel>
+                      </FormItem>
+                      <FormItem className='flex items-center gap-2 space-y-0'>
+                        <FormControl>
+                          <RadioGroupItem value='PACKAGE' />
+                        </FormControl>
+                        <FormLabel>Package</FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='isFeatured'
+              render={({ field }) => (
+                <FormItem className='flex flex-row items-start gap-2 space-y-0 rounded-md border p-3'>
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={disabled}
+                    />
+                  </FormControl>
+                  <div className='space-y-1 leading-none'>
+                    <FormLabel>Feature this tour</FormLabel>
+                    <FormDescription>
+                      This will make the tour visible in the featured list.
+                    </FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className='space-y-2'>
+            <FormLabel>Inclusions</FormLabel>
+            {inclusions.map((inclusion, index) => (
+              <div key={inclusion.id} className='relative'>
+                <FormField
+                  control={form.control}
+                  name={`inclusions.${index}.id`}
+                  render={({ field }) => (
+                    <FormItem hidden>
+                      <FormLabel>Id</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`inclusions.${index}.name`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input type='text' {...field} disabled={disabled} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  size='xs'
+                  type='button'
+                  variant='destructive'
+                  className='absolute rounded-full top-0 right-0'
+                  onClick={() => removeInclusion(index)}
+                >
+                  <X />
+                </Button>
+              </div>
+            ))}
             <Button
               type='button'
               variant='secondary'
               className='w-full'
-              onClick={() =>
-                append({
-                  pricingType: 'JOINER',
-                  minGroupSize: 1,
-                  maxGroupSize: 1,
-                  price: 0,
-                })
-              }
+              onClick={() => addInclusion({ name: 'New inclusion' })}
             >
-              Add Joiner price
+              Add Inclusion
             </Button>
+
+            <FormLabel>Exclusions</FormLabel>
+            {exclusions.map((exclusion, index) => (
+              <div key={exclusion.id} className='relative'>
+                <FormField
+                  control={form.control}
+                  name={`exclusions.${index}.id`}
+                  render={({ field }) => (
+                    <FormItem hidden>
+                      <FormLabel>Id</FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`exclusions.${index}.name`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input type='text' {...field} disabled={disabled} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  size='xs'
+                  type='button'
+                  variant='destructive'
+                  className='absolute rounded-full top-0 right-0'
+                  onClick={() => removeExclusion(index)}
+                >
+                  <X />
+                </Button>
+              </div>
+            ))}
             <Button
               type='button'
-              className='w-full'
               variant='secondary'
-              onClick={() =>
-                append({
-                  pricingType: 'PRIVATE',
-                  minGroupSize: 1,
-                  maxGroupSize: 2,
-                  price: 0,
-                })
-              }
+              className='w-full'
+              onClick={() => addExclusion({ name: 'New exclusion' })}
             >
-              Add private price
+              Add Exclusion
             </Button>
           </div>
-
-          <div className='flex gap-2'>
-            <FormField
-              name='minPax'
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Min pax</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type='number'
-                      value={field.value ?? undefined}
-                      onChange={(value) =>
-                        field.onChange(value.target.valueAsNumber)
-                      }
-                      disabled={disabled}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name='maxPax'
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Max pax</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      value={field.value ?? undefined}
-                      type='number'
-                      onChange={(value) =>
-                        field.onChange(value.target.valueAsNumber)
-                      }
-                      disabled={disabled}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <FormField
-            control={form.control}
-            name='type'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Tour Type</FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className='flex space-x-1'
-                    disabled={disabled}
-                  >
-                    <FormItem className='flex items-center gap-2 space-y-0'>
-                      <FormControl>
-                        <RadioGroupItem value='DAY' />
-                      </FormControl>
-                      <FormLabel>Day</FormLabel>
-                    </FormItem>
-                    <FormItem className='flex items-center gap-2 space-y-0'>
-                      <FormControl>
-                        <RadioGroupItem value='PACKAGE' />
-                      </FormControl>
-                      <FormLabel>Package</FormLabel>
-                    </FormItem>
-                  </RadioGroup>
-                </FormControl>
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name='isFeatured'
-            render={({ field }) => (
-              <FormItem className='flex flex-row items-start gap-2 space-y-0 rounded-md border p-3'>
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    disabled={disabled}
-                  />
-                </FormControl>
-                <div className='space-y-1 leading-none'>
-                  <FormLabel>Feature this tour</FormLabel>
-                  <FormDescription>
-                    This will make the tour visible in the featured list.
-                  </FormDescription>
-                </div>
-              </FormItem>
-            )}
-          />
         </div>
-        <Button type='submit' className='w-full' disabled={disabled}>
-          {id ? 'Update tour' : 'Add tour'}
-        </Button>
-        {!!id && (
-          <Button
-            type='button'
-            className='w-full'
-            variant='outline'
-            onClick={handleDelete}
-          >
-            <Trash className='size-3' /> Delete tour
+        <div className='w-full gap-2 flex justify-end'>
+          <Button type='submit' className='' disabled={disabled}>
+            {id ? 'Update tour' : 'Add tour'}
           </Button>
-        )}
+          {!!id && (
+            <Button
+              type='button'
+              className=''
+              variant='outline'
+              onClick={handleDelete}
+            >
+              <Trash className='size-3' /> Delete tour
+            </Button>
+          )}
+        </div>
       </form>
     </Form>
   );

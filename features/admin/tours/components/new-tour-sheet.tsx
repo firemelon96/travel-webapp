@@ -16,14 +16,16 @@ const defaultValues = {
   title: 'This is from react query',
   description: 'HElllo from react query howdy and i love to creeate webapps',
   address: 'Puerto',
-  prices: [
-    {
-      pricingType: PricingType.JOINER,
-      minGroupSize: 1,
-      maxGroupSize: 1,
-      price: 0,
-    },
-  ],
+  inclusions: ['Add inclusion'],
+  exclusions: [],
+  // prices: [
+  //   {
+  //     pricingType: PricingType.JOINER,
+  //     minGroupSize: 1,
+  //     maxGroupSize: 1,
+  //     price: 0,
+  //   },
+  // ],
   isFeatured: true,
   images: [],
   // privatePrice: [],

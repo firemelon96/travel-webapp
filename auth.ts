@@ -4,6 +4,7 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 import Github from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
 import Credentials from 'next-auth/providers/credentials';
+import Facebook from 'next-auth/providers/facebook';
 import { db } from './lib/db';
 import { UserRole } from '@prisma/client';
 import { LoginSchema } from './schemas';
@@ -18,6 +19,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Github,
     Google,
+    Facebook,
     Credentials({
       authorize: async (credentials) => {
         const validatedFields = LoginSchema.safeParse(credentials);
@@ -42,7 +44,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ user }) {
+    async signIn({ user, account }) {
+      if (account?.provider !== 'credentials') return true;
+
       const existingUser = await getUserById(user.id);
 
       if (!existingUser?.emailVerified) return false;

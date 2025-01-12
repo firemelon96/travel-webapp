@@ -4,7 +4,8 @@ import { UploadThingError } from 'uploadthing/server';
 
 const f = createUploadthing();
 
-const authSession = async (_req: Request) => {
+const authSession = async (req: Request) => {
+  console.log(req);
   const session = await auth();
   return session?.user;
 };

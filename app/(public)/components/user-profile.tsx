@@ -9,8 +9,12 @@ export const UserProfile = () => {
     <div className='ml-auto space-x-2'>
       {!session?.user && (
         <>
-          <Button variant='secondary'>Login</Button>
-          <Button variant='ghost'>Register</Button>
+          <Button variant='secondary' asChild>
+            <Link href='/sign-in'>Login</Link>
+          </Button>
+          <Button variant='ghost' asChild>
+            <Link href='/register'>Register</Link>
+          </Button>
         </>
       )}
       {session?.user && (

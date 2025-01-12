@@ -4,8 +4,8 @@ import { FcGoogle } from 'react-icons/fc';
 import { FaFacebook } from 'react-icons/fa';
 
 export const Social = () => {
-  const onClick = (provider: 'google' | 'facebook') => {
-    signIn(provider);
+  const onClick = async (provider: 'google' | 'facebook') => {
+    await signIn(provider);
   };
 
   return (
@@ -14,7 +14,7 @@ export const Social = () => {
         className='w-full'
         size='lg'
         variant='outline'
-        onClick={() => onClick('google')}
+        onClick={() => signIn('google')}
       >
         <FcGoogle className='size-5' />
       </Button>

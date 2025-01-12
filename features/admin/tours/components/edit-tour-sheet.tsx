@@ -42,6 +42,8 @@ export const EditTourSheet = () => {
         minPax: tourData.minPax,
         maxPax: tourData.maxPax,
         published: tourData.published,
+        inclusions: tourData.inclusions,
+        exclusions: tourData.exclusions,
       }
     : {
         title: '',
@@ -61,6 +63,8 @@ export const EditTourSheet = () => {
         minPax: 2,
         maxPax: 12,
         published: true,
+        inclusions: [],
+        exclusions: [],
       };
 
   const onDelete = async () => {

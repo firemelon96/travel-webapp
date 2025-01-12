@@ -27,6 +27,8 @@ export const getTour = async (id: string) => {
       maxPax: true,
       minPax: true,
       published: true,
+      inclusions: true,
+      exclusions: true,
     },
   });
 

@@ -20,11 +20,23 @@ export const TourPricing = z.object({
   price: z.number(),
 });
 
+const Inclusion = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+});
+
+const Exclusion = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+});
+
 export const TourSchema = z.object({
   title: z.string().min(1, { message: 'Title is required!' }),
   isFeatured: z.boolean(),
   type: z.enum(['DAY', 'PACKAGE']),
   address: z.string().min(1, { message: 'Address is required' }),
+  inclusions: z.array(Inclusion),
+  exclusions: z.array(Exclusion),
   prices: z.array(TourPricing),
   description: z
     .string()
