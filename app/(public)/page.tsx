@@ -1,5 +1,7 @@
 import { Hero } from './components/hero';
 import { ItemsCarousel } from './components/items-carousel';
+import { OtherServices } from './components/other-services';
+import { Tours } from './components/tours';
 
 const Home = () => {
   return (
@@ -7,6 +9,8 @@ const Home = () => {
       <Hero />
       {/* <FilterServices /> */}
       <ItemsCarousel />
+      <Tours />
+      <OtherServices />
     </main>
   );
 };

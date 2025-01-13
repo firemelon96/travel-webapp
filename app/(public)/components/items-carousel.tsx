@@ -14,7 +14,7 @@ export const ItemsCarousel = async () => {
       opts={{
         align: 'start',
       }}
-      className='w-full container mx-auto -mt-28'
+      className='w-full container mx-auto -mt-28 mb-10'
     >
       <CarouselContent className='space-x-3'>
         {featuredTours.map((tour) => (
